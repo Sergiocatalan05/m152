@@ -1,5 +1,9 @@
+<?php
+require_once("./bd/fonctions.php");
+$posts = afficherTousLesPosts();
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -25,8 +29,7 @@
 					<!-- top nav -->
 					<div class="navbar navbar-blue navbar-static-top">
 						<div class="navbar-header">
-							<button class="navbar-toggle" type="button" data-toggle="collapse"
-								data-target=".navbar-collapse">
+							<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
 								<span class="sr-only">Toggle</span>
 								<span class="icon-bar"></span>
 								<span class="icon-bar"></span>
@@ -37,11 +40,9 @@
 						<nav class="collapse navbar-collapse" role="navigation">
 							<form class="navbar-form navbar-left">
 								<div class="input-group input-group-sm" style="max-width:360px;">
-									<input class="form-control" placeholder="Search" name="srch-term" id="srch-term"
-										type="text">
+									<input class="form-control" placeholder="Search" name="srch-term" id="srch-term" type="text">
 									<div class="input-group-btn">
-										<button class="btn btn-default" type="submit"><i
-												class="glyphicon glyphicon-search"></i></button>
+										<button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
 									</div>
 								</div>
 							</form>
@@ -56,8 +57,7 @@
 							</ul>
 							<ul class="nav navbar-nav navbar-right">
 								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-											class="glyphicon glyphicon-user"></i></a>
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i></a>
 									<ul class="dropdown-menu">
 										<li><a href="">More</a></li>
 										<li><a href="">More</a></li>
@@ -77,7 +77,6 @@
 
 							<!-- content -->
 							<div class="row">
-
 								<div class="col-sm-7">
 
 									<div class="well">
@@ -85,6 +84,24 @@
 										<p>Montrer a travers ce reseau social vos inspiration et votre creativité
 										</p>
 									</div>
+									<?php
+
+									foreach ($posts as $post) {
+										echo $post->commentaire . "<p></p>";
+										$tousLesMedias = afficherLesImagesParId($post->idPost);
+										$nbMedia = count($tousLesMedias);
+										for ($i = 0; $i < $nbMedia; $i++) {
+											if ($tousLesMedias[$i]->typeMedia == "video/mp4") {
+												echo "<video loop autoplay>  <source src='./upload/" . $tousLesMedias[$i]->nomFichierMedia . "' type='" . $tousLesMedias[$i]->typeMedia . "'/>  </video>";
+											} else if ($tousLesMedias[$i]->typeMedia == "image/*") {
+												echo "<img src='./upload/" . $tousLesMedias[$i]->nomFichierMedia . "'>";
+											} else if ($tousLesMedias[$i]->typeMedia == "audio/mpeg") {
+												echo "<audio controls> <source src='./upload/" . $tousLesMedias[$i]->nomFichierMedia . "' type='" . $tousLesMedias[$i]->typeMedia . "'/> </audio>";
+											}
+										}
+									}
+									?>
+
 								</div>
 
 							</div>

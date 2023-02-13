@@ -42,6 +42,28 @@ function ajouterUneImage($type,$nom,$id)
 }
 
 
+function afficherTousLesPosts()
+{
+
+    $sql = "SELECT * from post";
+    $param = [];
+    $statement = dbRun($sql, $param);
+    return $statement->fetchAll(PDO::FETCH_OBJ);
+}
+
+
+function afficherLesImagesParId($idPost)
+{
+
+    $sql = "SELECT * from media where idPost in (SELECT idPost from post where idPost = ?)";
+    $param = [
+        $idPost,
+    ];
+    $statement = dbRun($sql, $param);
+    return $statement->fetchAll(PDO::FETCH_OBJ);
+}
+
+
 
 
 
