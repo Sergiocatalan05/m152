@@ -4,7 +4,7 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
-	<title>Facebook Theme Demo</title>
+	<title>CFPT POST</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<link href="assets/css/bootstrap.css" rel="stylesheet">
 	<!--[if lt IE 9]>
@@ -47,10 +47,10 @@
 							</form>
 							<ul class="nav navbar-nav">
 								<li>
-									<a href="facebook.html"><i class="glyphicon glyphicon-home"></i> Home</a>
+									<a href="#"><i class="glyphicon glyphicon-home"></i> Home</a>
 								</li>
 								<li>
-									<a href="#"><i class="glyphicon glyphicon-plus"></i>
+									<a href="post.php"><i class="glyphicon glyphicon-plus"></i>
 										Post</a>
 								</li>
 							</ul>
@@ -70,8 +70,35 @@
 						</nav>
 					</div>
 
-					<script type="text/javascript" src="assets/js/jquery.js"></script>
-					<script type="text/javascript" src="assets/js/bootstrap.js"></script>
+					<!-- /top nav -->
+
+					<div class="padding">
+						<div class="full col-sm-9">
+
+							<!-- content -->
+							<div class="row">
+
+								<div class="col-sm-7">
+
+									<div class="well">
+										<h1>Bienvenue sur CFPT Post</h1>
+										<p>Montrer a travers ce reseau social vos inspiration et votre creativité
+										</p>
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<!--/row-->
+
+
+
+					</div><!-- /col-9 -->
+				</div><!-- /padding -->
+			</div>
+
+			<script type="text/javascript" src="assets/js/jquery.js"></script>
+			<script type="text/javascript" src="assets/js/bootstrap.js"></script>
 </body>
 
 </html>
