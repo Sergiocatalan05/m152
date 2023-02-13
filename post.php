@@ -9,8 +9,8 @@ $PostDejaCreer = false;
 $arrayType = array();
 define("SIZE_MIN", 3*1024*1024);
 define("SIZE_MAX", 70*1024*1024);
-if (isset($publish)) {
-	if($_FILES['upload']['name'][0]){	
+if ($publish!=null) {
+	if($_FILES['upload']['name'][0] !=null){	
 	foreach ($_FILES['upload']['name'] as $key => $value) {
 		$file_size = $_FILES['upload']['size'][$key];
 		$file_name = $_FILES['upload']['name'][$key];
@@ -45,9 +45,9 @@ if (isset($publish)) {
 	$message = $err;	
 	
 }
-}
 else {
 	ajouterUnePublication($commenataire);
+}
 }
 ?>
 <!DOCTYPE html>
