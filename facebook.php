@@ -1,6 +1,8 @@
 <?php
 require_once("./bd/fonctions.php");
 $posts = afficherTousLesPosts();
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -18,14 +20,11 @@ $posts = afficherTousLesPosts();
 </head>
 
 <body>
-
 	<div class="wrapper">
 		<div class="box">
 			<div class="row row-offcanvas row-offcanvas-left">
-
 				<!-- main right col -->
 				<div class="column col-sm-10 col-xs-11" id="main">
-
 					<!-- top nav -->
 					<div class="navbar navbar-blue navbar-static-top">
 						<div class="navbar-header">
@@ -69,51 +68,58 @@ $posts = afficherTousLesPosts();
 							</ul>
 						</nav>
 					</div>
-
 					<!-- /top nav -->
-
 					<div class="padding">
 						<div class="full col-sm-9">
-
 							<!-- content -->
 							<div class="row">
 								<div class="col-sm-7">
-
 									<div class="well">
 										<h1>Bienvenue sur CFPT Post</h1>
 										<p>Montrer a travers ce reseau social vos inspiration et votre creativité
 										</p>
 									</div>
 									<?php
-
 									foreach ($posts as $post) {
-										echo $post->commentaire . "<p></p>";
+										echo $post->commentaire . "<p></p> <form method='post'> <input type='submit' name ='supprimer$post->idPost' value='Supprimer'> <a href='modificationPost.php?id=".$post->idPost."'>Modification</a></form>";
 										$tousLesMedias = afficherLesImagesParId($post->idPost);
 										$nbMedia = count($tousLesMedias);
+										if($nbMedia == 0){
+											if (filter_input(INPUT_POST, "supprimer$post->idPost")) {												
+												if(supprimerEtPostImages($post->idPost,$nbMedia)){
+													header("Location: facebook.php");
+												}
+											}
+										}
 										for ($i = 0; $i < $nbMedia; $i++) {
+											
+											if (filter_input(INPUT_POST, "supprimer$post->idPost")) {												
+												if(supprimerEtPostImages($post->idPost,$nbMedia,$tousLesMedias[$i]->nomFichierMedia)){
+													header("Location: facebook.php");
+												}
+											}
+
 											if ($tousLesMedias[$i]->typeMedia == "video/mp4") {
 												echo "<video loop autoplay>  <source src='./upload/" . $tousLesMedias[$i]->nomFichierMedia . "' type='" . $tousLesMedias[$i]->typeMedia . "'/>  </video>";
-											} else if ($tousLesMedias[$i]->typeMedia == "image/*") {
+											} else if ($tousLesMedias[$i]->typeMedia == "image/png" || $tousLesMedias[$i]->typeMedia == "image/jpg" || $tousLesMedias[$i]->typeMedia == "image/jpeg") {
 												echo "<img src='./upload/" . $tousLesMedias[$i]->nomFichierMedia . "'>";
 											} else if ($tousLesMedias[$i]->typeMedia == "audio/mpeg") {
 												echo "<audio controls> <source src='./upload/" . $tousLesMedias[$i]->nomFichierMedia . "' type='" . $tousLesMedias[$i]->typeMedia . "'/> </audio>";
 											}
+											
 										}
+
 									}
+									
+
 									?>
-
 								</div>
-
 							</div>
 						</div>
 						<!--/row-->
-
-
-
 					</div><!-- /col-9 -->
 				</div><!-- /padding -->
 			</div>
-
 			<script type="text/javascript" src="assets/js/jquery.js"></script>
 			<script type="text/javascript" src="assets/js/bootstrap.js"></script>
 </body>

@@ -1,92 +1,44 @@
 <?php
 require_once("./bd/fonctions.php");
-$commenataire = filter_input(INPUT_POST, "commentaire");
-$publish = filter_input(INPUT_POST, "publish");
+$post = recupereUnPost($_GET['id']);
+
+$media = afficherLesImagesParId($_GET['id']);
+$return = $post->commentaire;
+$btnModifier = filter_input(INPUT_POST, "modifier");
+$comm = filter_input(INPUT_POST, "commentaire");
 $err = "";
-$totFileSize = 0;
-$PostDejaCreer = false;
-$arrayType = array();
-define("SIZE_MIN", 3 * 1024 * 1024);
-define("SIZE_MAX", 70 * 1024 * 1024);
-
-if ($publish != null) {
-	if ($_FILES['upload']['name'][0] != null) {
-		$err = verifFichier($_FILES);
-		if ($err == "") {
-			foreach ($_FILES['upload']['name'] as $key => $value) {
-
-				$file_name = $_FILES["upload"]['name'][$key];
-				$file_type = $_FILES["upload"]['type'][$key];
-				$file_tmp = $_FILES["upload"]['tmp_name'][$key];
-
-				if ($PostDejaCreer == false) {
-					if (ajouterUnePublication($commenataire)) {
-						$PostDejaCreer = true;
-					}
-				}
-				$err= $file_type;
-				$idPost = lireId()->idPost;
-				$ext = explode(".", $file_name)[1];
-				$file_name = uniqid(explode(".", $file_name)[0]);
-
-				if (move_uploaded_file($file_tmp, "./upload/" . $file_name . "." . $ext)) {
-
-					if (!ajouterEtPostImages($commenataire,$file_type, $file_name . "." . $ext, $idPost, $PostDejaCreer)) {
-						unlink($file_name . "." . $ext);
-					}
-				}
-			}
-			
-			 header("Location: facebook.php");
-			 exit;
+if ($btnModifier) {
+	if ($post != false) {
+		$return = "";
+		if (isset($comm)) {
+			$return = $comm;
+		} else {
+			$return = $post->commentaire;
 		}
-	} else {
-		ajouterUnePublication($commenataire);
-
-		header("Location: facebook.php");
-		exit;
+		if ($comm != "") {
+			modification($_FILES["upload"],$media,$return, $post->idPost);
+			header("location: facebook.php");
+			exit;
+		} else {
+			$err = "vous devez mettre un commentaire";
+		}
 	}
 }
 
-
-
-function verifFichier($fichier)
-{
-	$typeValide = array("image/jpeg", "image/jpg", "image/png", "video/mp4", "video/m4v", "audio/mpeg", "audio/mp3", "audio/wav", "audio/ogg");
-	$err = "";
-	$totalSize = 0;
-	$nbFichier = count($fichier['upload']['name']);
-	for ($i = 0; $i < $nbFichier; $i++) {
-		$file_type = $fichier["upload"]['type'][$i];
-		$file_size = $fichier["upload"]['size'][$i];
-
-		$totalSize += $file_size;
-		if ($file_size > SIZE_MIN) {
-			$err .= "Le fichier " . $_FILES["upload"]["name"] . " est trop volumineux.";
-		}
-		if (!in_array($file_type, $typeValide)) {
-			$err .= "le fichier selectioné n'est pas fonctionnel";
-		}
-		if ($totalSize > SIZE_MAX) {
-			$err .= "Les fichiers sont trop volumineux";
-		}
-	}
-	return $err;
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<meta charset="utf-8">
-	<title>Facebook Theme Demo</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="assets/css/bootstrap.css" rel="stylesheet">
 	<!--[if lt IE 9]>
           <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 	<link href="assets/css/facebook.css" rel="stylesheet">
+	<title>Document</title>
 </head>
 
 <body>
@@ -135,6 +87,7 @@ function verifFichier($fichier)
 							</ul>
 						</nav>
 					</div>
+
 					<div class="padding">
 						<div class="full col-sm-9">
 
@@ -144,14 +97,24 @@ function verifFichier($fichier)
 								<div class="col-sm-7">
 
 									<div class="well">
+										<?php
+										foreach ($media as $m) {
+											if ($m->typeMedia == "video/mp4") {
+												echo "<video loop autoplay>  <source src='./upload/" . $m->nomFichierMedia . "' type='" . $m->typeMedia . "'/>  </video>";
+											} else if ($m->typeMedia == "image/png" || $m->typeMedia == "image/jpg" || $m->typeMedia == "image/jpeg") {
+												echo "<img src='./upload/" . $m->nomFichierMedia . "'>";
+											} else if ($m->typeMedia == "audio/mpeg") {
+												echo "<audio controls> <source src='./upload/" . $m->nomFichierMedia . "' type='" . $m->typeMedia . "'/> </audio>";
+											}
+										}
+										?>
 										<form action="#" method="post" enctype='multipart/form-data'>
-											<textarea name="commentaire" cols="60" rows="3"></textarea>
+											<textarea name="commentaire" cols="60" rows="3"><?php echo $return ?></textarea>
 											<input type="file" name="upload[]" accept="image/*, video/*, audio/*" multiple>
-											<input type="submit" name="publish">
+											<input type="submit" name="modifier" value="Confirmer">
+
 										</form>
-										<p>
-											<?= $err ?>
-										</p>
+										<? $err ?>
 									</div>
 								</div>
 
