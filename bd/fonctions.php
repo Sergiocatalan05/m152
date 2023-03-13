@@ -158,8 +158,10 @@ function modification($files, $media, $comm, $id)
                     $file_name . "." . $ext,
                     $id
                 ];
-                
-                move_uploaded_file($files['tmp_name'][$key], "./upload/" .  $file_name . "." . $ext);
+                if(!move_uploaded_file($files['tmp_name'][$key], "./upload/" .  $file_name . "." . $ext)){
+                        throw new Exception("Le fichier n'a pas été trouvé", 1);
+                        
+                }            
                 dbRun($sql, $param); 
             }
             
